@@ -9,13 +9,21 @@ const Home = () => {
     return <h2>Loading...</h2>;
   } 
 
+
   return (
     <>
       {isError && <h2>{isError}</h2>}
+      
 
       <div className="grid">
         {data&&data.map((curProduct) => {
-          const { id, brand, name, price } = curProduct;
+          const { id, brand, name, price, productAvailable } = curProduct;
+          const cardStyle = {
+            width: "18rem",
+            height: "12rem",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
+            backgroundColor: productAvailable ? "#fff" : "#ccc", 
+          };
           return (
             <div
               className="card mb-3"

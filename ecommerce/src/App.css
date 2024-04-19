@@ -235,3 +235,17 @@ padding-top: 100px;
     top: -85px;
   }
 }
+/* <....................................Add Product................................................> */
+
+.center-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.center-container .image-control {
+  display: block;
+  margin: 0 auto;
+  padding-top: 2rem;
+}
