@@ -94,6 +94,12 @@ padding-top: 100px;
   margin: 0 auto;
   padding: 15px;
   display: flex;
+} 
+.left-column-img{
+  vertical-align: middle;
+  width: 40rem;
+  padding-top: 6rem;
+  margin: 20px;
 }
 .left-column {
   width: 40%;
@@ -187,6 +193,11 @@ padding-top: 100px;
   /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
   grid-gap: 10px 4px;
 
+}
+.update-button{
+  display: flex;
+  width: 10rem;
+  justify-content: space-around;
 }
  
 .product-price span {

@@ -166,22 +166,28 @@ const AddProduct = () => {
     category: "",
     stockQuantity: "",
     releaseDate: "",
-    productAvailable: true,
+    productAvailable: false,
   });
   const [image, setImage] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+    // setProduct({...product, image: e.target.files[0]})
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("image", image);
-    formData.append("name", product.name);
-    formData.append("brand", product.brand);
-    formData.append("description", product.description);
-    formData.append("price", product.price);
-    formData.append("category", product.category);
-    formData.append("stockQuantity", product.stockQuantity);
-    formData.append("releaseDate", product.releaseDate);
-    formData.append("productAvailable", product.productAvailable);
+    formData.append("imageFile", image);
+    formData.append(
+      "product",
+      new Blob([JSON.stringify(product)], { type: "application/json" })
+    );
 
     axios
       .post("http://localhost:8080/api/product", formData, {
@@ -198,10 +204,6 @@ const AddProduct = () => {
         alert("Error adding product");
       });
   };
-  const handleImageChange=(e)=>{
-    setImage(e.target.files[0])
-    setProduct({...product, image: e.target.files[0]})
-  }
 
   return (
     <div className="center-container">
@@ -214,8 +216,9 @@ const AddProduct = () => {
             type="text"
             className="form-control"
             placeholder="Product Name"
-            onChange={(e) => setProduct({ ...product, name: e.target.value })}
-            id="name"
+            onChange={handleInputChange}
+            value={product.name}
+            name="name"
           />
         </div>
         <div className="col-md-6">
@@ -224,9 +227,11 @@ const AddProduct = () => {
           </label>
           <input
             type="text"
+            name="brand"
             className="form-control"
             placeholder="Enter your Brand"
-            onChange={(e) => setProduct({ ...product, brand: e.target.value })}
+            value={product.brand}
+            onChange={handleInputChange}
             id="brand"
           />
         </div>
@@ -238,9 +243,9 @@ const AddProduct = () => {
             type="text"
             className="form-control"
             placeholder="Add product description"
-            onChange={(e) =>
-              setProduct({ ...product, description: e.target.value })
-            }
+            value={product.description}
+            name="description"
+            onChange={handleInputChange}
             id="description"
           />
         </div>
@@ -249,10 +254,12 @@ const AddProduct = () => {
             <h6>Price</h6>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             placeholder="Eg: $1000"
-            onChange={(e) => setProduct({ ...product, price: e.target.value })}
+            onChange={handleInputChange}
+            value={product.price}
+            name="price"
             id="price"
           />
         </div>
@@ -264,9 +271,9 @@ const AddProduct = () => {
             type="text"
             className="form-control"
             placeholder="Eg : Fashion, Electronics etc ..."
-            onChange={(e) =>
-              setProduct({ ...product, category: e.target.value })
-            }
+            onChange={handleInputChange}
+            value={product.category}
+            name="category"
             id="category"
           />
         </div>
@@ -279,9 +286,9 @@ const AddProduct = () => {
             type="text"
             className="form-control"
             placeholder="Stock Remaining"
-            onChange={(e) =>
-              setProduct({ ...product, stockQuantity: e.target.value })
-            }
+            onChange={handleInputChange}
+            value={product.stockQuantity}
+            name="stockQuantity"
             // value={`${stockAlert}/${stockQuantity}`}
             id="stockQuantity"
           />
@@ -293,9 +300,9 @@ const AddProduct = () => {
           <input
             type="date"
             className="form-control"
-            onChange={(e) =>
-              setProduct({ ...product, releaseDate: e.target.value })
-            }
+            value={product.releaseDate}
+            name="releaseDate"
+            onChange={handleInputChange}
             id="releaseDate"
           />
         </div>
@@ -308,7 +315,6 @@ const AddProduct = () => {
           <input
             className="form-control"
             type="file"
-            name="file"
             onChange={handleImageChange}
           />
         </div>
@@ -317,7 +323,12 @@ const AddProduct = () => {
             <input
               className="form-check-input"
               type="checkbox"
+              name="productAvailable"
               id="gridCheck"
+              checked={product.productAvailable}
+              onChange={(e) =>
+                setProduct({ ...product, productAvailable: e.target.checked })
+              }
             />
             <label className="form-check-label">Product Available</label>
           </div>

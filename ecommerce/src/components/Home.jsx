@@ -6,7 +6,7 @@ const Home = () => {
   const { data, isError } = useContext(AppContext);
   console.log(data);
   if (isError) {
-    return <h2>Loading...</h2>;
+    return <h2 className="text-center " style={{padding: "10rem"}}>Loading...</h2>;
   } 
 
 
