@@ -7,7 +7,7 @@ import AddProduct from "./components/AddProduct";
 import Product from "./components/Product";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./Context/Context";
-// import UpdateProduct from "./components/UpdateProduct";
+import UpdateProduct from "./components/UpdateProduct";
 function App() {
   return (
     <AppProvider>
@@ -19,7 +19,7 @@ function App() {
           <Route path="/product" element={<Product />} />
           <Route path="product/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
-          {/* <Route path="/product/update/:id" element={<UpdateProduct />} /> */}
+          <Route path="/product/update/:id" element={<UpdateProduct />} />
         </Routes>
       </BrowserRouter>
     </AppProvider>

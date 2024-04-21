@@ -1,89 +1,9 @@
-// import { useParams } from "react-router-dom";
-// import { useContext, useEffect, } from "react";
-// import { useState } from "react";
-// import AppContext from "../Context/Context";
-// import axios from "axois";
-// const Product = () => {
-//   const { id } = useParams();
-//   const { data } = useContext(AppContext);
-//   const [product, setProduct] = useState(null);
-//   const[imageUrl,setImageUrl]=useState('')
-//   useEffect(() => {
-//     const fetchImage = async () => {
-//       try {
-//         const response = await axios.get(`http://localhost:8080/api/product/${id}/image`);
-//         setImageUrl(response.data.imageUrl);
-//       } catch (error) {
-//         console.error("Error fetching image:", error);
-//       }
-//     };
-
-//     fetchImage();
-//   }, [id]);
-
-//   console.log("URL Parameter ID:", id);
-//   console.log("Product Data:", data);
-
-//   if (!data || data.length === 0) {
-//     return <h2 className="text-center">Loading...</h2>;
-//   }
-//   // console.log("data types:", typeof id, typeof data[0].id);
-//   const product = data.find((item) => item.id === parseInt(id));
-//   console.log("Product :", product);
-//   if (!product) {
-//     return <h2 className="text-center">Loading...</h2>;
-//   }
-//   if (!product.active) {
-//     return <h2 className="text-center ">Product Not Found</h2>;
-//   }
-//   return (
-//     <>
-//       <div className="containers">
-//         <div className="left-column">
-//           <img data-image="black" src="" alt="" >{product.imageData}</img>
-//           <img data-image="blue" src="" alt="" />
-//           <img data-image="red" className="active" src="" alt="asda" />
-//         </div>
-
-//         <div className="right-column">
-//           <div className="product-description">
-//             <span>{product.category}</span>
-//             <h1>{product.name}</h1>
-//             <h5>{product.brand}</h5>
-//             <p>{product.description}</p>
-//           </div>
-
-//           <div className="product-price">
-//             <span>{"$" + product.price}</span>
-//             <a href="#" className="cart-btn">
-//               Add to cart
-//             </a>
-//             <h6>
-//               Stock Available :{" "}
-//               <i style={{ color: "green", fontWeight: "bold" }}>
-//                 {product.stockQuantity}
-//               </i>
-//             </h6>
-//             <p className="release-date">
-//               <h6>Product listed on:</h6>
-//               <i> {product.releaseDate.slice(0, 10)}</i>
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default Product;
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import { useContext, useEffect } from "react";
 import { useState } from "react";
 import AppContext from "../Context/Context";
 import axios from "../axois";
-// import UpdateProduct from "./UpdateProduct";
+import UpdateProduct from "./UpdateProduct";
 const Product = () => {
   const { id } = useParams();
   const { data } = useContext(AppContext);
@@ -122,7 +42,35 @@ const Product = () => {
   console.log("URL Parameter ID:", id);
   // console.log("Product Data:", data);
 
- 
+  
+
+  const deleteProduct =  () => {
+    try {
+       axios.delete(`http://localhost:8080/api/product/${id}`);
+      navigate("/"); // Redirect to a different route after successful deletion
+      console.log("Product deleted successfully");
+      alert("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      if (error.response) {
+        // Error if i am getting it from backend
+        console.error("Backend error:", error.response.data);
+        alert("Failed to delete product. Backend error.");
+      } else if (error.request) {
+        // error if network errors
+        console.error("Network error:", error.request);
+        alert("Failed to delete product. Network error.");
+      } else {
+        // error if Handle other errors
+        console.error("Other error:", error.message);
+        alert("Failed to delete product. Please try again.");
+      }
+    }
+  };
+  
+  const handleEditClick = () => {
+    navigate(`/product/update/${id}`); 
+  };
 
   if (!product) {
     return (
@@ -167,12 +115,14 @@ const Product = () => {
             </p>
           </div>
           <div className="update-button ">
-            <button className="btn btn-primary" type="button">
+            <button className="btn btn-primary" type="button"  onClick={handleEditClick}>
               Update
             </button> 
+            {/* <UpdateProduct product={product} onUpdate={handleUpdate} /> */}
             <button
               className="btn btn-primary"
               type="button"
+              onClick={deleteProduct}
             >
               Delete
             </button>

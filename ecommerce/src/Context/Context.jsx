@@ -9,11 +9,11 @@ export const AppProvider = ({ children }) => {
 
   const getApiData = async () => {
     try {
-      const response = await axios.get("/product");
+      const response = await axios.get("/products");
       setData(response.data);
     } catch (error) {
       setIsError(error.message);
-    }
+    } 
   };
 
   useEffect(() => {
