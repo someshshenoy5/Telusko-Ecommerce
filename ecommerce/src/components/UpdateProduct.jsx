@@ -5,25 +5,27 @@ import axios from "axios";
 const UpdateProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [formData, setFormData] = useState({
+  const [image,setImage] = useState(null);
+  const [updateProduct, setUpdateProduct] = useState({
     name: "",
-    category: "",
     brand: "",
     description: "",
     price: "",
+    category: "",
     stockQuantity: "",
     releaseDate: "",
+    productAvailable: false,
   });
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProduct = async() => {
       try {
-        const response = await axios.get(
+        const response =  await axios.get(
           `http://localhost:8080/api/product/${id}`
         );
         setProduct(response.data);
         // console.log(setProduct);
-        setFormData(response.data);
+        setUpdateProduct(response.data);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -31,6 +33,32 @@ const UpdateProduct = () => {
 
     fetchProduct();
   }, [id]);
+
+  
+  const handleSubmit =  (e) => {
+    e.preventDefault();
+    const updatedProduct = new FormData();
+    updatedProduct.append("imageFile", image);
+    updatedProduct.append(
+      "product",
+      new Blob([JSON.stringify(updateProduct)], { type: "application/json" })
+    );
+    
+    axios.put(`http://localhost:8080/api/product/${id}`,updatedProduct, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      console.log("Product updated successfully:", response.data);
+      alert("Product updated successfully!");
+    })
+    .catch((error) => {
+      console.error("Error updating product:", error);
+      alert("Failed to update product. Please try again."); // Informative error message
+    });
+  };
+  
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -40,25 +68,14 @@ const UpdateProduct = () => {
     return `${year}-${month}-${day}`;
   };
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+    const{name,value} =e.target;
+    setUpdateProduct({
+      ...updateProduct,
+      [name]: value
     });
   };
-
-  const handleSubmit =  (e) => {
-    e.preventDefault();
-    try {
-      const response = axios.put(
-        `http://localhost:8080/api/product/${id}`,
-        formData
-      );
-      console.log("Product updated successfully:", response.data);
-      alert("Product updated successfully!");
-    } catch (error) {
-      console.error("Error updating product:", error);
-      alert("Failed to update product. Please try again."); // Informative error message
-    }
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
   };
 
   return (
@@ -72,10 +89,10 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Product Name"
+            // placeholder="Product Name"
             // onChange={handleInputChange}
-            defaultValue={product.name}
-            value={formData.name}
+            placeholder={product.name}
+            value={updateProduct.name}
             onChange={handleChange}
             name="name"
           />
@@ -88,9 +105,10 @@ const UpdateProduct = () => {
             type="text"
             name="brand"
             className="form-control"
-            placeholder="Enter your Brand"
-            defaultValue={product.brand}
-            value={formData.brand}
+            // placeholder="Enter your Brand"
+            placeholder={product.brand}
+            // defaultValue={product.brand}
+            value={updateProduct.brand}
             onChange={handleChange}
             id="brand"
           />
@@ -102,11 +120,12 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Add product description"
-            defaultValue={product.description}
+            // placeholder="Add product description"
+            placeholder={product.description}
+            // defaultValue={product.description}
             name="description"
             onChange={handleChange}
-            value={formData.description}
+            value={updateProduct.description}
             id="description"
           />
         </div>
@@ -117,10 +136,11 @@ const UpdateProduct = () => {
           <input
             type="number"
             className="form-control"
-            placeholder="Eg: $1000"
+            // placeholder="Eg: $1000"
             onChange={handleChange}
-            value={formData.price}
-            defaultValue={product.price}
+            value={updateProduct.price}
+            placeholder={product.price}
+            // defaultValue={product.price}
             name="price"
             id="price"
           />
@@ -132,10 +152,11 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Eg : Fashion, Electronics etc ..."
+            // placeholder="Eg : Fashion, Electronics etc ..."
             onChange={handleChange}
-            value={formData.category}
-            defaultValue={product.category}
+            placeholder={product.category}
+            value={updateProduct.category}
+            // defaultValue={product.category}
             name="category"
             id="category"
           />
@@ -148,15 +169,41 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            placeholder="Stock Remaining"
+            // placeholder="Stock Remaining"
             onChange={handleChange}
-            defaultValue={product.stockQuantity}
-            value={formData.stockQuantity}
+            placeholder={product.stockQuantity}
+            // defaultValue={product.stockQuantity}
+            value={updateProduct.stockQuantity}
             name="stockQuantity"
-          
             id="stockQuantity"
           />
         </div>
+        <div className="col-md-4">
+          <label className="form-label">
+            <h6>Image</h6>
+          </label>
+          <input
+            className="form-control"
+            type="file"
+            onChange={handleImageChange}
+          />
+        </div>
+        <div className="col-12">
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              name="productAvailable"
+              id="gridCheck"
+              checked={product.productAvailable}
+              onChange={(e) =>
+                setProduct({ ...product, productAvailable: e.target.checked })
+              }
+            />
+            <label className="form-check-label">Product Available</label>
+          </div>
+        </div>
+
      
         <div className="col-12">
           <button type="submit" className="btn btn-primary">
