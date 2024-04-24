@@ -9,7 +9,7 @@ const Navbar = () => {
       <header>
         <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
           <div className="container-fluid">
-            <a className="navbar-brand" href="#">
+            <a className="navbar-brand" href="https://telusko.com/">
               Telusko
             </a>
             <button
