@@ -1,7 +1,7 @@
 import React,{useEffect} from "react";
+import Home from "./Home";
 
-
-const Navbar = () => {
+const Navbar = ({cart}) => {
 
 
   return (
@@ -68,8 +68,10 @@ const Navbar = () => {
           <a className="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
               </ul>
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center cart">
+                <a href="/cart" className="nav-link text-dark">
                 <i className="bi bi-cart text-dark me-2">Cart</i>
+                </a>
               <form className="d-flex" role="search">
                 <input
                   className="form-control me-2"

@@ -13,7 +13,7 @@
   background-color: #333;
   color: #fff;
   padding: 10px 0;
-  z-index: 1000; 
+  /* z-index: 1000;  */
 }
 
 .content {
@@ -220,6 +220,12 @@ padding-top: 100px;
 .cart-btn:hover {
   background-color: #64af3d;
 }
+.disabled-btn {
+  background-color: #ccc; /* Grey background */
+  color: #666; /* Dark grey text color */
+  cursor: not-allowed; /* Show cursor as not-allowed */
+}
+
 /* Responsive */
 @media (max-width: 940px) {
   .container {
@@ -259,4 +265,199 @@ padding-top: 100px;
   display: block;
   margin: 0 auto;
   padding-top: 2rem;
+}
+
+/* <......................................CART....................................................> */
+/* * {
+  box-sizing: border-box;
+} */
+ 
+.shopping-cart{
+  width: 90%;
+  height: 80%;
+  /* width: 750px;
+  height: 423px; */
+  margin: 80px auto;
+  background: #FFFFFF;
+  box-shadow: 1px 2px 3px 2px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.title {
+  height: 60px;
+  border-bottom: 1px solid #E1E8EE;
+  padding: 20px 30px;
+  color: #5E6977;
+  font-size: 18px;
+  font-weight: 400;
+}
+ 
+.item {
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+ 
+.item:nth-child(3) {
+  border-top:  1px solid #E1E8EE;
+  border-bottom:  1px solid #E1E8EE;
+}
+.buttons {
+  position: relative;
+  display: flex;
+  /* padding-top: 30px; */
+  margin-right: 60px;
+}
+.delete-btn,
+.like-btn {
+  display: inline-block;
+  Cursor: pointer;
+}
+.delete-btn {
+  width: 18px;
+  height: 17px;
+  background: url(&amp;quot;delete-icn.svg&amp;quot;) no-repeat center;
+}
+ 
+.like-btn {
+  position: absolute;
+  top: 9px;
+  left: 15px;
+  background: url('twitter-heart.png');
+  width: 60px;
+  height: 60px;
+  background-size: 2900%;
+  background-repeat: no-repeat;
+}
+.is-active {
+  animation-name: animate;
+  animation-duration: .8s;
+  animation-iteration-count: 1;
+  animation-timing-function: steps(28);
+  animation-fill-mode: forwards;
+}
+ 
+@keyframes animate {
+  0%   { background-position: left;  }
+  50%  { background-position: right; }
+  100% { background-position: right; }
+}
+.image  img{
+  margin-right: 80px;
+   height: 100px;
+   /* max-width: 100% ;
+   max-height: 100%;
+   width: auto;
+   height: auto; */
+}
+
+.description {
+  padding-top: 10px;
+  margin-right: 60px;
+  padding-left: 10px;
+  flex-grow: 1;
+}
+
+.description span {
+  display: block;
+  /* padding-left: 20px; */
+  font-size: 14px;
+  color: #43484D;
+  font-weight: 400;
+}
+ 
+.description span:first-child {
+  margin-bottom: 5px;
+}
+.description span:last-child {
+  font-weight: 300;
+  margin-top: 8px;
+  color: #86939E;
+}
+.quantity {
+  /* padding-top: 20px; */
+  margin-right: 60px;
+  display: flex;
+  align-items: center;
+}
+.quantity input {
+  /* -webkit-appearance: none; */
+  border: none;
+  text-align: center;
+  width: 32px;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+ 
+.buttons[class*=btn] {
+  /* width: 30px;
+  height: 30px; */
+  background-color: #E1E8EE;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.minus-btn  {
+  border: none;
+  /* color: #358ED7; */
+  font-weight: 500;
+
+}
+.plus-btn {
+  border: none;
+}
+.remove-btn{
+  border: none;
+  background-color: white;
+}
+ 
+.buttons:focus,
+input:focus {
+  outline:0;
+}
+.total-price {
+  width: 83px;
+  /* padding-top: 27px; */
+  text-align: center;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+}
+@media (max-width: 800px) {
+  .shopping-cart {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .item {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+  }
+  .image img {
+    width: 50%;
+  }
+  .image,
+  .quantity,
+  .description {
+    width: 100%;
+    text-align: center;
+    margin: 6px 0;
+  }
+  .buttons {
+    margin-right: 20px;
+  }
+}
+.buttons-liked{
+  padding-left: 10px;
+}
+.total{
+display: flex;
+justify-content: center;
+font-weight: 700;
 }

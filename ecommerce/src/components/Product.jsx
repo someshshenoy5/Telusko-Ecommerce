@@ -6,11 +6,12 @@ import axios from "../axois";
 import UpdateProduct from "./UpdateProduct";
 const Product = () => {
   const { id } = useParams();
-  const { data } = useContext(AppContext);
+  const { data, addToCart } = useContext(AppContext);
   const [product, setProduct] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
 
+  // console.log(data);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -42,36 +43,27 @@ const Product = () => {
   console.log("URL Parameter ID:", id);
   // console.log("Product Data:", data);
 
-  
-
-  const deleteProduct =  () => {
-    try {
-       axios.delete(`http://localhost:8080/api/product/${id}`);
-      navigate("/"); // Redirect to a different route after successful deletion
-      console.log("Product deleted successfully");
-      alert("Product deleted successfully");
-    } catch (error) {
-      console.error("Error deleting product:", error);
-      if (error.response) {
-        // Error if i am getting it from backend
-        console.error("Backend error:", error.response.data);
-        alert("Failed to delete product. Backend error.");
-      } else if (error.request) {
-        // error if network errors
-        console.error("Network error:", error.request);
-        alert("Failed to delete product. Network error.");
-      } else {
-        // error if Handle other errors
-        console.error("Other error:", error.message);
-        alert("Failed to delete product. Please try again.");
-      }
-    }
+  const deleteProduct = () => {
+    axios
+      .delete(`http://localhost:8080/api/product/${id}`)
+      .then((response) => {
+        console.log("Product deleted successfully");
+        alert("Product deleted successfully");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error deleting product:", error);
+      });
   };
   
   const handleEditClick = () => {
     navigate(`/product/update/${id}`); 
   };
 
+  const handlAddToCart = () =>{
+    addToCart(product);
+    alert("Product added to cart");
+  }
   if (!product) {
     return (
       <h2 className="text-center" style={{ padding: "10rem" }}>
@@ -100,9 +92,11 @@ const Product = () => {
 
           <div className="product-price">
             <span>{"$" + product.price}</span>
-            <a href="#" className="cart-btn">
-              Add to cart
-            </a>
+            <button  className={`cart-btn ${!product.productAvailable ? "disabled-btn" : ""}`} 
+            onClick={handlAddToCart}
+            disabled= {!product.productAvailable}>
+              {product.productAvailable ? "Add to cart" : "Out of Stock"}
+            </button>
             <h6>
               Stock Available :{" "}
               <i style={{ color: "green", fontWeight: "bold" }}>

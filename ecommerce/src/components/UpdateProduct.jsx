@@ -178,7 +178,7 @@ const UpdateProduct = () => {
             id="stockQuantity"
           />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-8">
           <label className="form-label">
             <h6>Image</h6>
           </label>
