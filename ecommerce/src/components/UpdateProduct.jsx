@@ -5,7 +5,7 @@ import axios from "axios";
 const UpdateProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [image,setImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [updateProduct, setUpdateProduct] = useState({
     name: "",
     brand: "",
@@ -18,14 +18,15 @@ const UpdateProduct = () => {
   });
 
   useEffect(() => {
-    const fetchProduct = async() => {
+    const fetchProduct = async () => {
       try {
-        const response =  await axios.get(
+        const response = await axios.get(
           `http://localhost:8080/api/product/${id}`
         );
         setProduct(response.data);
         // console.log(setProduct);
         setUpdateProduct(response.data);
+        setImage(response.data.imageUrl);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -34,8 +35,7 @@ const UpdateProduct = () => {
     fetchProduct();
   }, [id]);
 
-  
-  const handleSubmit =  (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const updatedProduct = new FormData();
     updatedProduct.append("imageFile", image);
@@ -43,35 +43,28 @@ const UpdateProduct = () => {
       "product",
       new Blob([JSON.stringify(updateProduct)], { type: "application/json" })
     );
-    
-    axios.put(`http://localhost:8080/api/product/${id}`,updatedProduct, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    .then((response) => {
-      console.log("Product updated successfully:", response.data);
-      alert("Product updated successfully!");
-    })
-    .catch((error) => {
-      console.error("Error updating product:", error);
-      alert("Failed to update product. Please try again."); // Informative error message
-    });
-  };
-  
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Adding 1 to month since January is 0
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
+    axios
+      .put(`http://localhost:8080/api/product/${id}`, updatedProduct, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Product updated successfully:", response.data);
+        alert("Product updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating product:", error);
+        alert("Failed to update product. Please try again."); // Informative error message
+      });
   };
+
   const handleChange = (e) => {
-    const{name,value} =e.target;
+    const { name, value } = e.target;
     setUpdateProduct({
       ...updateProduct,
-      [name]: value
+      [name]: value,
     });
   };
   const handleImageChange = (e) => {
@@ -79,6 +72,7 @@ const UpdateProduct = () => {
   };
 
   return (
+    <div className="update-product-container">
     <div className="center-container">
       <h1>Update Product</h1>
       <form className="row g-3 pt-5" onSubmit={handleSubmit}>
@@ -89,8 +83,6 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            // placeholder="Product Name"
-            // onChange={handleInputChange}
             placeholder={product.name}
             value={updateProduct.name}
             onChange={handleChange}
@@ -105,9 +97,7 @@ const UpdateProduct = () => {
             type="text"
             name="brand"
             className="form-control"
-            // placeholder="Enter your Brand"
             placeholder={product.brand}
-            // defaultValue={product.brand}
             value={updateProduct.brand}
             onChange={handleChange}
             id="brand"
@@ -120,9 +110,7 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            // placeholder="Add product description"
             placeholder={product.description}
-            // defaultValue={product.description}
             name="description"
             onChange={handleChange}
             value={updateProduct.description}
@@ -136,11 +124,9 @@ const UpdateProduct = () => {
           <input
             type="number"
             className="form-control"
-            // placeholder="Eg: $1000"
             onChange={handleChange}
             value={updateProduct.price}
             placeholder={product.price}
-            // defaultValue={product.price}
             name="price"
             id="price"
           />
@@ -149,17 +135,21 @@ const UpdateProduct = () => {
           <label className="form-label">
             <h6>Category</h6>
           </label>
-          <input
-            type="text"
-            className="form-control"
-            // placeholder="Eg : Fashion, Electronics etc ..."
-            onChange={handleChange}
-            placeholder={product.category}
+          <select
+            className="form-select"
             value={updateProduct.category}
-            // defaultValue={product.category}
+            onChange={handleChange}
             name="category"
             id="category"
-          />
+          >
+            <option value="">Select category</option>
+            <option value="laptop">Laptop</option>
+            <option value="headphone">Headphone</option>
+            <option value="mobile">Mobile</option>
+            <option value="electronics">Electronics</option>
+            <option value="toys">Toys</option>
+            <option value="fashion">Fashion</option>
+          </select>
         </div>
 
         <div className="col-md-4">
@@ -169,10 +159,8 @@ const UpdateProduct = () => {
           <input
             type="text"
             className="form-control"
-            // placeholder="Stock Remaining"
             onChange={handleChange}
             placeholder={product.stockQuantity}
-            // defaultValue={product.stockQuantity}
             value={updateProduct.stockQuantity}
             name="stockQuantity"
             id="stockQuantity"
@@ -186,6 +174,9 @@ const UpdateProduct = () => {
             className="form-control"
             type="file"
             onChange={handleImageChange}
+            placeholder="Upload image"
+            name="imageUrl"
+            id="imageUrl"
           />
         </div>
         <div className="col-12">
@@ -204,13 +195,13 @@ const UpdateProduct = () => {
           </div>
         </div>
 
-     
         <div className="col-12">
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

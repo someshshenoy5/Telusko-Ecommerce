@@ -41,7 +41,7 @@ const Product = () => {
   }, [id]);
 
   console.log("URL Parameter ID:", id);
-  // console.log("Product Data:", data);
+  console.log("Product Data:", data);
 
   const deleteProduct = () => {
     axios
@@ -74,14 +74,13 @@ const Product = () => {
   return (
     <>
       <div className="containers">
-        {/* <div className="left-column-img"> */}
+       
         <img
           className="left-column-img"
           src={imageUrl}
           alt={product.imageName}
         />
 
-        {/* </div> */}
         <div className="right-column">
           <div className="product-description">
             <span>{product.category}</span>
