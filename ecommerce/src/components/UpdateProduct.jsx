@@ -56,7 +56,7 @@ const UpdateProduct = () => {
       })
       .catch((error) => {
         console.error("Error updating product:", error);
-        alert("Failed to update product. Please try again."); // Informative error message
+        alert("Failed to update product. Please try again."); 
       });
   };
 

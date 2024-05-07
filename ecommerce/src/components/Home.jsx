@@ -43,10 +43,16 @@ const Home = ({selectedCategory}) => {
   return (
     <>
      
-      <div className="grid" style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-around" }}>
+      <div className="grid">
         {filteredProducts.length === 0 ?( <h2 className="text-center" style={{ padding: "10rem" }}>No Products Available</h2> ):(
         filteredProducts.map((product) => {
           const { id, brand, name, price, productAvailable, imageUrl } = product;
+          const cardStyle ={
+            width: "18rem",
+            height: "12rem",
+            boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
+            backgroundColor: productAvailable ? "#fff" : "#ccc", 
+          }
           return (
             <div className="card mb-3" style={{ width: "18rem", height: "24rem", boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px", backgroundColor: productAvailable ? "#fff" : "#ccc", margin: "10px", display: "flex", flexDirection: "column" }} key={id}>
               <Link to={`/product/${id}`} style={{ textDecoration: "none", color: "inherit" }}>

@@ -23,6 +23,7 @@
   --btn-bg: var(--navbar_background);
   --btn-clr: black;
   --category-hvr: rgb(200, 200, 200);
+  --search_result-bg: rgb(239, 239, 239);
 }
 .dark-theme{
   --root_background: #1f1f1f;
@@ -42,8 +43,74 @@
     --btn-bg: var(--navbar_background);
     --btn-clr: white;
     --category-hvr: rgb(115, 115, 115);
+    --search_result-bg: rgb(49, 49, 49);
 }
 
+/* <.............................................NAVBAR DROPDOWN......................................> */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.theme-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: inherit;
+}
+
+.cart {
+  position: relative;
+}
+
+/* .navbar-nav .nav-link {
+  color: black;
+} */
+
+/* .navbar-nav .nav-link:hover {
+  color: #007bff;
+} */
+
+.list-group {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: calc(100% - 1rem); 
+  background-color: var(--body_color);
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.list-group-item {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: var(--search_result-bg) !important;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+
+.no-results-message {
+  margin-top: 0.5rem;
+  color: #dc3545; 
+  display: flex;
+  justify-content: center;
+}
+.search-result-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.search-result-link:hover {
+  text-decoration: underline;
+} 
+
+/* <..........................................................................................................>  */
 h1{
   color: var(--para-clr);
 }

@@ -14,6 +14,8 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const [theme, setTheme] = useState(getInitialTheme());
   const [input, setInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [noResults, setNoResults] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -29,20 +31,22 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     }
   };
 
-  // const handleSearch = async () => {
-  //   try {
-  //     const response = await axios.get(`http://localhost:8080/api/products?search=${input}`);
-  //     setSearchResults(response.data);
-  //   } catch (error) {
-  //     console.error("Error searching:", error);
-  //   }
-  // };
-  const handleChange = (value) => {
+  const handleChange = async (value) => {
     setInput(value);
-    if(value.length>2){
-      fetchData(value);
-    }else{
+    if (value.length >= 1) {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/products/search?name=${value}`
+      );
+      setSearchResults(response.data);
+      setNoResults(response.data.length === 0);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
+    } else {
       setSearchResults([]);
+      setNoResults(false);
     }
   };
   const handleCategorySelect = (category) => {
@@ -153,7 +157,28 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   aria-label="Search"
                   value={input}
                   onChange={(e) => handleChange(e.target.value)}
+                  onFocus={() => setSearchFocused(true)} // Set searchFocused to true when search bar is focused
+                  onBlur={() => setSearchFocused(false)} // Set searchFocused to false when search bar loses focus
                 />
+                {searchFocused && (
+                  <ul className="list-group">
+                    {searchResults.length > 0 ? (  
+                        searchResults.map((result) => (
+                          <li key={result.id} className="list-group-item">
+                            <a href={`/product/${result.id}`} className="search-result-link">
+                            <span>{result.name}</span>
+                            </a>
+                          </li>
+                        ))
+                    ) : (
+                      noResults && (
+                        <p className="no-results-message">
+                          No Prouduct with such Name
+                        </p>
+                      )
+                    )}
+                  </ul>
+                )}
                 {/* <button
                   className="btn btn-outline-success"
                   onClick={handleSearch}

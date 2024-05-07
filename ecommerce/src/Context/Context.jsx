@@ -8,6 +8,7 @@ const AppContext = createContext({
   addToCart: (product) => {},
   removeFromCart: (productId) => {},
   refreshData:() =>{},
+  updateStockQuantity: (productId, newQuantity) =>{}
 });
 
 export const AppProvider = ({ children }) => {
@@ -51,8 +52,17 @@ export const AppProvider = ({ children }) => {
     refreshData();
   }, []);
 
+  const updateStockQuantity = async (productId, newQuantity) => {
+    try {
+      await axios.put(`/product/${productId}`, {stockQuantity: newQuantity});
+      refreshData(),
+      console.log("Stock quantity updated successfully");
+    } catch (error) {
+      console.error("Error updating stock quantity:", error);
+    }
+  };
   return (
-    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart,refreshData }}>
+    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart,refreshData ,updateStockQuantity }}>
       {children}
     </AppContext.Provider>
   );
