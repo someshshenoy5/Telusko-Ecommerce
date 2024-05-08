@@ -135,7 +135,7 @@ const AddProduct = () => {
             <h6>Stock Quantity</h6>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             placeholder="Stock Remaining"
             onChange={handleInputChange}

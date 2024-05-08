@@ -16,7 +16,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [noResults, setNoResults] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-
+  const [showSearchResults,setShowSearchResults] = useState(false)
   useEffect(() => {
     fetchData();
   }, []);
@@ -34,6 +34,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
   const handleChange = async (value) => {
     setInput(value);
     if (value.length >= 1) {
+      setShowSearchResults(true)
     try {
       const response = await axios.get(
         `http://localhost:8080/api/products/search?name=${value}`
@@ -45,6 +46,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
       console.error("Error searching:", error);
     }
     } else {
+      setShowSearchResults(false);
       setSearchResults([]);
       setNoResults(false);
     }
@@ -160,7 +162,7 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
                   onFocus={() => setSearchFocused(true)} // Set searchFocused to true when search bar is focused
                   onBlur={() => setSearchFocused(false)} // Set searchFocused to false when search bar loses focus
                 />
-                {searchFocused && (
+                {showSearchResults && (
                   <ul className="list-group">
                     {searchResults.length > 0 ? (  
                         searchResults.map((result) => (

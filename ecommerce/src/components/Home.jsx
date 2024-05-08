@@ -44,7 +44,7 @@ const Home = ({selectedCategory}) => {
     <>
      
       <div className="grid">
-        {filteredProducts.length === 0 ?( <h2 className="text-center" style={{ padding: "10rem" }}>No Products Available</h2> ):(
+        {filteredProducts.length === 0 ?( <h2 className="text-center" style={{ display: "flex", justifyContent: "center", alignItems: "center", }}>No Products Available</h2> ):(
         filteredProducts.map((product) => {
           const { id, brand, name, price, productAvailable, imageUrl } = product;
           const cardStyle ={

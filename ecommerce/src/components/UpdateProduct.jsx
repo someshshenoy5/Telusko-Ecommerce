@@ -157,7 +157,7 @@ const UpdateProduct = () => {
             <h6>Stock Quantity</h6>
           </label>
           <input
-            type="text"
+            type="number"
             className="form-control"
             onChange={handleChange}
             placeholder={product.stockQuantity}
