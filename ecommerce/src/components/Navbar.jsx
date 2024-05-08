@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Home from "./Home";
-// import axios from '../axois';
+import Home from "./Home"
 import axios from "axios";
 // import { json } from "react-router-dom";
 // import { BiSunFill, BiMoon } from "react-icons/bi";

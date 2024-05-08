@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import axios from '../axois';  
+// import axios from '../axios';  
 import AppContext from "../Context/Context";
-
-const Cart = () => {
+import axios  from "axios";
+const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
   const { cart, removeFromCart } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -39,9 +39,57 @@ const Cart = () => {
     setCartItems(newCartItems);
   };
 
-  const handleCheckout = (()=>{
-    console.log(handleCheckout)
-  })
+  const updateStockQuantity = async (item) => {
+    try {
+      await axios.put(`http://localhost:8080/api/product/${item.id}`, item);
+      console.log('Stock quantity updated successfully');
+    } catch (error) {
+      console.error('Error updating stock quantity:', error);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append("imageFile", image);
+    const productData = {
+      id: id,
+      name: updateProduct.name,
+      brand: updateProduct.brand,
+      price: updateProduct.price,
+      quantity: updateProduct.quantity,
+      stockQuantity: updatedStockQuantity // Assuming you have updatedStockQuantity defined somewhere
+    };
+    formData.append("product", new Blob([JSON.stringify(productData)], { type: "application/json" }));
+
+    // Send the FormData object in a PUT request
+    axios
+      .put(`http://localhost:8080/api/product/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Product updated successfully:", response.data);
+        alert("Product updated successfully!");
+      })
+      .catch((error) => {
+        console.error("Error updating product:", error);
+        alert("Failed to update product. Please try again."); 
+      });
+  };
+
+  const handleCheckout = async () => {
+    cartItems.forEach(async (item) => {
+      const updatedStockQuantity = item.stockQuantity - item.quantity;
+      item.stockQuantity = updatedStockQuantity;
+      await updateStockQuantity(item);
+      removeFromCart(item.id);
+    });
+    console.log('Checkout Complete');
+  };
+
   const handleDecreaseQuantity = (itemId) => {
     const newCartItems = cartItems.map(item => 
       item.id === itemId ? {...item, quantity: Math.max(item.quantity - 1, 1)} : item
@@ -54,7 +102,6 @@ const Cart = () => {
     const newCartItems = cartItems.filter(item => item.id !== itemId);
     setCartItems(newCartItems);
   };
-
 
   return (
     <div className="cart-container">
