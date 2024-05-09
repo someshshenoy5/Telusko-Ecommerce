@@ -6,7 +6,7 @@ import axios from "../axios";
 import UpdateProduct from "./UpdateProduct";
 const Product = () => {
   const { id } = useParams();
-  const { data, addToCart } = useContext(AppContext);
+  const { data, addToCart, removeFromCart } = useContext(AppContext);
   const [product, setProduct] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
@@ -43,17 +43,16 @@ const Product = () => {
   console.log("URL Parameter ID:", id);
   console.log("Product Data:", data);
 
-  const deleteProduct = () => {
-    axios
-      .delete(`http://localhost:8080/api/product/${id}`)
-      .then((response) => {
-        console.log("Product deleted successfully");
-        alert("Product deleted successfully");
-        navigate("/");
-      })
-      .catch((error) => {
-        console.error("Error deleting product:", error);
-      });
+  const deleteProduct = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/api/product/${id}`);
+      removeFromCart(id)
+      console.log("Product deleted successfully");
+      alert("Product deleted successfully");
+      navigate("/");
+    }catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
   
   const handleEditClick = () => {

@@ -12,6 +12,7 @@ const Home = ({selectedCategory}) => {
     if (!isDataFetched) {
       refreshData();
       setIsDataFetched(true);
+      
     }
   }, [refreshData, isDataFetched]);
 
@@ -32,6 +33,7 @@ const Home = ({selectedCategory}) => {
       };
 
       fetchImagesAndUpdateProducts();
+      
     }
   }, [data]);
 
