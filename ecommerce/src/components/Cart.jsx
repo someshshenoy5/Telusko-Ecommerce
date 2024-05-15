@@ -6,17 +6,21 @@ const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
   const { cart, removeFromCart } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-
+  const [cartImage, setCartImage] =useState([])
+ 
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
       const updatedCartItems = await Promise.all(
         cart.map(async (item) => {
-          console.log(item)
+          console.log("ITEM",item)
           try {
             const response = await axios.get(
               `http://localhost:8080/api/product/${item.id}/image`,
               { responseType: "blob" }
             );
+            const imageFile = await converUrlToFile(response.data,response.data.imageName)
+            console.log("imageFile",imageFile)
+            setCartImage(imageFile);
             const imageUrl = URL.createObjectURL(response.data);
             return { ...item, imageUrl };
           } catch (error) {
@@ -33,6 +37,14 @@ const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
     }
   }, [cart]);
 
+  useEffect(() => {
+    console.log("image Updated", cartImage);
+  }, [cartImage]);
+
+  const converUrlToFile = async(blobData, fileName) => {
+    const file = new File([blobData], fileName, { type: blobData.type });
+    return file;
+  }
   useEffect(() => {
     const total = cartItems.reduce(
       (acc, item) => acc + item.price * item.quantity,
@@ -62,39 +74,44 @@ const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
     const newCartItems = cartItems.filter((item) => item.id !== itemId);
     setCartItems(newCartItems);
   };
-  const calculateUpdatedStockQuantity = (item) => {
-    return item.stockQuantity - item.quantity;
-  };
- 
 
   const handleCheckout = async () => {
     try {
       for (const item of cartItems) {
-        const {imageUrl, quantity, ...rest}=item;
+        const { imageUrl, imageName, imageData, imageType, quantity, ...rest } = item;
         const updatedStockQuantity = item.stockQuantity - item.quantity;
-        
-        const updatedProductData = {...rest, stockQuantity: updatedStockQuantity };
+  
+        const updatedProductData = { ...rest, stockQuantity: updatedStockQuantity };
         console.log("updated product data", updatedProductData)
-        
-        try {
-          const response = await axios.put(
-            `http://localhost:8080/api/product/${item.id}`,
-            updatedProductData
-          );
-          
-          console.log("Product Successfully Updated", response.data);
-          alert("Order Placed");
-          removeFromCart(item.id);
-        } catch (error) {
-          console.log(error);
-          alert("Failed to update product. Please try again.");
-        }
+  
+        const cartProduct = new FormData();
+        cartProduct.append("imageFile", cartImage);
+        cartProduct.append(
+          "product",
+          new Blob([JSON.stringify(updatedProductData)], { type: "application/json" })
+        );
+  
+        await axios
+          .put(`http://localhost:8080/api/product/${item.id}`, cartProduct, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((response) => {
+            console.log("Product updated successfully:", (cartProduct));
+            
+          })
+          .catch((error) => {
+            console.error("Error updating product:", error);
+          });
       }
-      console.log("Checkout Complete");
+      setCartItems([]);
     } catch (error) {
       console.log("error during checkout", error);
     }
   };
+  
+    
   
 
   
@@ -122,6 +139,7 @@ const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
                   </div>
                   <div>
                     <img
+                      // src={cartImage ? URL.createObjectURL(cartImage) : "Image unavailable"}
                       src={item.imageUrl}
                       alt={item.name}
                       className="cart-item-image"

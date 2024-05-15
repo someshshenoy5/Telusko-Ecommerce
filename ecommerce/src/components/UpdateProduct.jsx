@@ -6,11 +6,6 @@ const UpdateProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [image, setImage] = useState();
-  // const [imageInfo, setImageInfo] = useState({
-  //   ImageData: null,
-  //   imageName:"",
-  //   imageType:""
-  // })
   const [updateProduct, setUpdateProduct] = useState({
     id: null,
     name: "",
@@ -60,6 +55,8 @@ const UpdateProduct = () => {
  
   const handleSubmit = async(e) => {
     e.preventDefault();
+    console.log("images", image)
+    console.log("productsdfsfsf", updateProduct)
     const updatedProduct = new FormData();
     updatedProduct.append("imageFile", image);
     updatedProduct.append(
@@ -67,7 +64,8 @@ const UpdateProduct = () => {
       new Blob([JSON.stringify(updateProduct)], { type: "application/json" })
     );
   
-  
+
+  console.log("formData : ", updatedProduct)
     axios
       .put(`http://localhost:8080/api/product/${id}`, updatedProduct, {
         headers: {
