@@ -696,3 +696,8 @@ color: var(--quantity-clr);
   justify-content: center;
   align-items: center;
 }
+
+
+.checkout-button button{
+  background-color: var(--button-clr);
+}

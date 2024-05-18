@@ -2,45 +2,86 @@ import React, { useContext, useState, useEffect } from "react";
 // import axios from '../axios';
 import AppContext from "../Context/Context";
 import axios from "axios";
-const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
+const Cart = () => {
   const { cart, removeFromCart } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartImage, setCartImage] =useState([])
- 
+  
+  // useEffect(() => {
+  //   const fetchImagesAndUpdateCart = async () => {
+  //     console.log("Cart", cart);
+  //     const updatedCartItems = await Promise.all(
+  //       cart.map(async (item) => {
+  //         console.log("ITEM",item)
+  //         try {
+  //           const response = await axios.get(
+  //             `http://localhost:8080/api/product/${item.id}/image`,
+  //             { responseType: "blob" }
+  //           );
+            // const imageFile = await converUrlToFile(response.data,response.data.imageName)
+  //           setCartImage(imageFile);
+  //           const imageUrl = URL.createObjectURL(response.data);
+  //           return { ...item, imageUrl, available: true };
+  //         } catch (error) {
+  //           console.error("Error fetching image:", error);
+  //           return { ...item, imageUrl: "placeholder-image-url", available: false };
+  //         }
+  //       })
+  //     );
+  //     const filteredCartItems = updatedCartItems.filter((item) => item.available);
+  //     setCartItems(updatedCartItems);
+     
+  //   };
+
+  //   if (cart.length) {
+  //     fetchImagesAndUpdateCart();
+  //   }
+  // }, [cart]);
+
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
-      const updatedCartItems = await Promise.all(
-        cart.map(async (item) => {
-          console.log("ITEM",item)
-          try {
-            const response = await axios.get(
-              `http://localhost:8080/api/product/${item.id}/image`,
-              { responseType: "blob" }
-            );
-            const imageFile = await converUrlToFile(response.data,response.data.imageName)
-            console.log("imageFile",imageFile)
-            setCartImage(imageFile);
-            const imageUrl = URL.createObjectURL(response.data);
-            return { ...item, imageUrl };
-          } catch (error) {
-            console.error("Error fetching image:", error);
-            return { ...item, imageUrl: "placeholder-image-url" };
-          }
-        })
-      );
-      setCartItems(updatedCartItems);
+      try {
+    
+        const response = await axios.get("http://localhost:8080/api/products");
+        const backendProductIds = response.data.map((product) => product.id);
+
+        const updatedCartItems = cart.filter((item) => backendProductIds.includes(item.id));
+        const cartItemsWithImages = await Promise.all(
+          updatedCartItems.map(async (item) => {
+            try {
+              const response = await axios.get(
+                `http://localhost:8080/api/product/${item.id}/image`,
+                { responseType: "blob" }
+              );
+              const imageFile = await converUrlToFile(response.data, response.data.imageName);
+              setCartImage(imageFile)
+              const imageUrl = URL.createObjectURL(response.data);
+              return { ...item, imageUrl };
+            } catch (error) {
+              console.error("Error fetching image:", error);
+              return { ...item, imageUrl: "placeholder-image-url" };
+            }
+          })
+        );
+
+        setCartItems(cartItemsWithImages);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+    
+      }
     };
 
     if (cart.length) {
       fetchImagesAndUpdateCart();
     }
   }, [cart]);
+  
+
 
   useEffect(() => {
-    console.log("image Updated", cartImage);
-  }, [cartImage]);
-
+    console.log("CartItems", cartItems);
+  }, [cartItems]);
   const converUrlToFile = async(blobData, fileName) => {
     const file = new File([blobData], fileName, { type: blobData.type });
     return file;
@@ -110,10 +151,6 @@ const Cart = ({ image, id, updateProduct, updatedStockQuantity }) => {
       console.log("error during checkout", error);
     }
   };
-  
-    
-  
-
   
   return (
     <div className="cart-container">

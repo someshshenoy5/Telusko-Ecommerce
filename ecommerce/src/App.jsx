@@ -33,32 +33,23 @@ function App() {
       setCart([...cart, { ...product, quantity: 1 }]);
     }
   };
-  // const [searchResults, setSearchResults] = useState([]);
-  // const handleSearch = (searchQuery) => {
-  //   const results = products.filter((product) =>
-  //     product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  //   );
-  //   setSearchResults(results);
-  // }
-  // console.log(searchResults);
+
   return (
     <AppProvider>
       <BrowserRouter>
         <Navbar onSelectCategory={handleCategorySelect}
-        //  onSearch={handleSearch}
          />
         <Routes>
           <Route
             path="/"
             element={
-              <Home addToCart={addToCart} selectedCategory={selectedCategory} 
-              // products={searchResults}
+              <Home addToCart={addToCart} selectedCategory={selectedCategory}
               />
             }
           />
           <Route path="/add_product" element={<AddProduct />} />
-          <Route path="/product" element={<Product />} />
-          <Route path="product/:id" element={<Product />} />
+          <Route path="/product" element={<Product  />} />
+          <Route path="product/:id" element={<Product  />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/product/update/:id" element={<UpdateProduct />} />
         </Routes>

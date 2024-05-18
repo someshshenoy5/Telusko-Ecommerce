@@ -6,12 +6,12 @@ import axios from "../axios";
 import UpdateProduct from "./UpdateProduct";
 const Product = () => {
   const { id } = useParams();
-  const { data, addToCart, removeFromCart } = useContext(AppContext);
+  const { data, addToCart, removeFromCart, cart, refreshData } =
+    useContext(AppContext);
   const [product, setProduct] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const navigate = useNavigate();
 
-  // console.log(data);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -21,7 +21,6 @@ const Product = () => {
         setProduct(response.data);
         if (response.data.imageName) {
           fetchImage();
-          console.log(response.data.imageName);
         }
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -34,35 +33,32 @@ const Product = () => {
         { responseType: "blob" }
       );
       setImageUrl(URL.createObjectURL(response.data));
-      console.log(response.data);
     };
 
     fetchProduct();
   }, [id]);
 
-  console.log("URL Parameter ID:", id);
-  console.log("Product Data:", data);
-
   const deleteProduct = async () => {
     try {
       await axios.delete(`http://localhost:8080/api/product/${id}`);
-      removeFromCart(id)
+      removeFromCart(id);
       console.log("Product deleted successfully");
       alert("Product deleted successfully");
+      refreshData();
       navigate("/");
-    }catch (error) {
+    } catch (error) {
       console.error("Error deleting product:", error);
     }
   };
-  
+
   const handleEditClick = () => {
-    navigate(`/product/update/${id}`); 
+    navigate(`/product/update/${id}`);
   };
 
-  const handlAddToCart = () =>{
+  const handlAddToCart = () => {
     addToCart(product);
     alert("Product added to cart");
-  }
+  };
   if (!product) {
     return (
       <h2 className="text-center" style={{ padding: "10rem" }}>
@@ -73,7 +69,6 @@ const Product = () => {
   return (
     <>
       <div className="containers">
-       
         <img
           className="left-column-img"
           src={imageUrl}
@@ -90,9 +85,13 @@ const Product = () => {
 
           <div className="product-price">
             <span>{"$" + product.price}</span>
-            <button  className={`cart-btn ${!product.productAvailable ? "disabled-btn" : ""}`} 
-            onClick={handlAddToCart}
-            disabled= {!product.productAvailable}>
+            <button
+              className={`cart-btn ${
+                !product.productAvailable ? "disabled-btn" : ""
+              }`}
+              onClick={handlAddToCart}
+              disabled={!product.productAvailable}
+            >
               {product.productAvailable ? "Add to cart" : "Out of Stock"}
             </button>
             <h6>
@@ -107,9 +106,13 @@ const Product = () => {
             </p>
           </div>
           <div className="update-button ">
-            <button className="btn btn-primary" type="button"  onClick={handleEditClick}>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={handleEditClick}
+            >
               Update
-            </button> 
+            </button>
             {/* <UpdateProduct product={product} onUpdate={handleUpdate} /> */}
             <button
               className="btn btn-primary"

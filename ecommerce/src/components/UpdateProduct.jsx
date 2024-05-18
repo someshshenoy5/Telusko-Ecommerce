@@ -73,7 +73,7 @@ const UpdateProduct = () => {
         },
       })
       .then((response) => {
-        console.log("Product updated successfully:", response.data);
+        console.log("Product updated successfully:", updatedProduct);
         alert("Product updated successfully!");
       })
       .catch((error) => {
@@ -223,9 +223,9 @@ const UpdateProduct = () => {
                 type="checkbox"
                 name="productAvailable"
                 id="gridCheck"
-                checked={product.productAvailable}
+                checked={updateProduct.productAvailable}
                 onChange={(e) =>
-                  setProduct({ ...product, productAvailable: e.target.checked })
+                  setUpdateProduct({ ...updateProduct, productAvailable: e.target.checked })
                 }
               />
               <label className="form-check-label">Product Available</label>
