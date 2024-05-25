@@ -52,13 +52,20 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const clearCart =() =>{
+    setCart([]);
+  }
+  
   useEffect(() => {
     refreshData();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
   
   return (
-    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart,refreshData  }}>
+    <AppContext.Provider value={{ data, isError, cart, addToCart, removeFromCart,refreshData, clearCart  }}>
       {children}
     </AppContext.Provider>
   );
