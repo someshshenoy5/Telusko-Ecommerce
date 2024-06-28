@@ -30,53 +30,55 @@ const Navbar = ({ onSelectCategory, onSearch }) => {
     }
   };
 
-  // const handleChange = async (value) => {
-  //   setInput(value);
-  //   if (value.length >= 1) {
-  //     setShowSearchResults(true)
-  //   try {
-  //     const response = await axios.get(
-  //       `http://localhost:8080/api/products/search?name=${value}`
-  //     );
-  //     setSearchResults(response.data);
-  //     setNoResults(response.data.length === 0);
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error("Error searching:", error);
-  //   }
-  //   } else {
-  //     setShowSearchResults(false);
-  //     setSearchResults([]);
-  //     setNoResults(false);
-  //   }
-  // };
   const handleChange = async (value) => {
     setInput(value);
     if (value.length >= 1) {
-      setShowSearchResults(true);
-      try {
-        let response;
-        if (!isNaN(value)) {
-          // Input is a number, search by ID
-          response = await axios.get(`http://localhost:8080/api/products/search?id=${value}`);
-        } else {
-          // Input is not a number, search by keyword
-          response = await axios.get(`http://localhost:8080/api/products/search?keyword=${value}`);
-        }
-
-        const results = response.data;
-        setSearchResults(results);
-        setNoResults(results.length === 0);
-        console.log(results);
-      } catch (error) {
-        console.error("Error searching:", error.response ? error.response.data : error.message);
-      }
+      setShowSearchResults(true)
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/products/search?keyword=${value}`
+      );
+      setSearchResults(response.data);
+      setNoResults(response.data.length === 0);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error searching:", error);
+    }
     } else {
       setShowSearchResults(false);
       setSearchResults([]);
       setNoResults(false);
     }
   };
+
+  
+  // const handleChange = async (value) => {
+  //   setInput(value);
+  //   if (value.length >= 1) {
+  //     setShowSearchResults(true);
+  //     try {
+  //       let response;
+  //       if (!isNaN(value)) {
+  //         // Input is a number, search by ID
+  //         response = await axios.get(`http://localhost:8080/api/products/search?id=${value}`);
+  //       } else {
+  //         // Input is not a number, search by keyword
+  //         response = await axios.get(`http://localhost:8080/api/products/search?keyword=${value}`);
+  //       }
+
+  //       const results = response.data;
+  //       setSearchResults(results);
+  //       setNoResults(results.length === 0);
+  //       console.log(results);
+  //     } catch (error) {
+  //       console.error("Error searching:", error.response ? error.response.data : error.message);
+  //     }
+  //   } else {
+  //     setShowSearchResults(false);
+  //     setSearchResults([]);
+  //     setNoResults(false);
+  //   }
+  // };
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
