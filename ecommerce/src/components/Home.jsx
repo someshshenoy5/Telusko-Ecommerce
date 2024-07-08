@@ -1,14 +1,17 @@
+
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
 import unplugged from "../assets/unplugged.png"
+
 
 const Home = ({ selectedCategory }) => {
   const { data, isError, addToCart, refreshData } = useContext(AppContext);
   const [products, setProducts] = useState([]);
   const [isDataFetched, setIsDataFetched] = useState(false);
-
+  const { token } = useContext(AppContext);
+  const navigate = useNavigate()
   useEffect(() => {
     if (!isDataFetched) {
       refreshData();
@@ -17,6 +20,7 @@ const Home = ({ selectedCategory }) => {
   }, [refreshData, isDataFetched]);
 
   useEffect(() => {
+
     if (data && data.length > 0) {
       const fetchImagesAndUpdateProducts = async () => {
         const updatedProducts = await Promise.all(
@@ -24,7 +28,11 @@ const Home = ({ selectedCategory }) => {
             try {
               const response = await axios.get(
                 `http://localhost:8080/api/product/${product.id}/image`,
-                { responseType: "blob" }
+                { responseType: "blob",  
+                  headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+                }
               );
               const imageUrl = URL.createObjectURL(response.data);
               return { ...product, imageUrl };
@@ -43,7 +51,7 @@ const Home = ({ selectedCategory }) => {
 
       fetchImagesAndUpdateProducts();
     }
-  }, [data]);
+  }, [data,token]);
 
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category === selectedCategory)
@@ -152,7 +160,7 @@ const Home = ({ selectedCategory }) => {
                         className="card-text"
                         style={{ fontWeight: "600", fontSize: "1.1rem",marginBottom:'5px' }}
                       >
-                        <i class="bi bi-currency-rupee"></i>
+                        <i className="bi bi-currency-rupee"></i>
                         {price}
                       </h5>
                     </div>

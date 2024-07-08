@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import AppContext from "../Context/Context";
+
 
 const UpdateProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [image, setImage] = useState();
+  const { token } = useContext(AppContext);
   const [updateProduct, setUpdateProduct] = useState({
     id: null,
     name: "",
@@ -23,13 +26,22 @@ const UpdateProduct = () => {
       try {
         const response = await axios.get(
           `http://localhost:8080/api/product/${id}`
+          , {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
 
         setProduct(response.data);
       
         const responseImage = await axios.get(
           `http://localhost:8080/api/product/${id}/image`,
-          { responseType: "blob" }
+          { responseType: "blob", 
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+           }
         );
        const imageFile = await converUrlToFile(responseImage.data,response.data.imageName)
         setImage(imageFile);     
@@ -70,6 +82,8 @@ const UpdateProduct = () => {
       .put(`http://localhost:8080/api/product/${id}`, updatedProduct, {
         headers: {
           "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`
+            
         },
       })
       .then((response) => {
