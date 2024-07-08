@@ -20,7 +20,8 @@
   --btn-clr: black;
   --category-hvr: rgb(200, 200, 200);
   --search_result-bg: rgb(239, 239, 239);
-  --hr_line_card: black
+  --hr_line_card: black;
+  --modal-backgroundcolor : rgb(62, 62, 62);
 }
 .dark-theme{
   --root_background: white;
@@ -41,7 +42,8 @@
     --btn-clr: white;
     --category-hvr: rgb(115, 115, 115);
     --search_result-bg: rgb(49, 49, 49);
-    --hr_line_card: rgb(255, 255, 255)
+    --hr_line_card: rgb(255, 255, 255);
+    --modal-backgroundcolor: rgb(48, 48, 48);
 }
 
 #root {
@@ -126,9 +128,9 @@ h2{
 h3{
   color: var(--para-clr);
 }
-/* h4{
+h4{
   color: var(--para-clr);
-} */
+}
 h5{
   color: var(--para-clr);
 }
@@ -393,9 +395,11 @@ padding-top: 100px;
   background-color: #64af3d;
 }
 .disabled-btn {
-  background-color: #ccc; /* Grey background */
-  color: #666; /* Dark grey text color */
-  cursor: not-allowed; /* Show cursor as not-allowed */
+  background-color: #ccc; 
+  color: #666;
+  cursor: not-allowed; 
+  pointer-events: none
+  
 }
 
 /* Responsive */
@@ -728,14 +732,13 @@ input:focus {
   color: black;
 
 }
-.checkout-items{
-  display: column;
-}
 .checkoutPopup {
   background-color: var(--body_background) !important;
 }
-
-
+.order-value{
+  font-weight: bold ;
+  color: green !important;
+}
 /* <........................................Update Product.......................................> */
 
 .update-product-container {
@@ -1180,168 +1183,6 @@ font-size: 14px;
 }
 /* <...........................................Login............................................> */
 
-/* 
-.Login-background{
-  width: 430px;
-  height: 520px;
-  position: absolute;
-  transform: translate(-50%,-50%);
-  left: 50%;
-  top: 50%;
-}
-.Login-background .shape{
-  height: 200px;
-  width: 200px;
-  position: absolute;
-  border-radius: 50%;
-}
-.shape:first-child{
-  background: linear-gradient(
-      #1845ad,
-      #23a2f6
-  );
-  left: -80px;
-  top: -80px;
-}
-.shape:last-child{
-  background: linear-gradient(
-      to right,
-      #ff512f,
-      #f09819
-  );
-  right: -30px;
-  bottom: -80px;
-}
-.Login-form{
-  height: 520px;
-  width: 400px;
-  background-color: rgba(255,255,255,0.13);
-  position: absolute;
-  transform: translate(-50%,-50%);
-  top: 50%;
-  left: 50%;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.1);
-  box-shadow: 0 0 40px rgba(8,7,16,0.6);
-  padding: 50px 35px;
-  
-}
-.Login-form *{
-  font-family: 'Poppins',sans-serif;
-  color: #ffffff;
-  letter-spacing: 0.5px;
-  outline: none;
-  border: none;
-}
-.Login-Heading{
-  font-size: 32px;
-  font-weight: 500;
-  line-height: 42px;
-  text-align: center;
-  color: white !important;
-}
-
-.login-label{
-  display: block;
-  margin-top: 30px;
-  font-size: 16px;
-  font-weight: 500;
-}
-.Login-input{
-  display: block;
-  height: 50px;
-  width: 100%;
-  background-color: rgba(255,255,255,0.07);
-  border-radius: 3px;
-  padding: 0 10px;
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: 300;
-}
-::placeholder{
-  color: #e5e5e5;
-}
-.Login-btn{
-  margin-top: 50px;
-  width: 100%;
-  background-color: #ae9e9e;
-  color: #080710;
-  padding: 15px 0;
-  font-size: 18px;
-  font-weight: 600;
-  border-radius: 5px;
-  cursor: pointer;
-}
-.social{
-margin-top: 30px;
-display: flex;
-}
-.social div{
-background: red;
-width: 150px;
-border-radius: 3px;
-padding: 5px 10px 10px 5px;
-background-color: rgba(255,255,255,0.27);
-color: #eaf0fb;
-text-align: center;
-}
-.social div:hover{
-background-color: rgba(255,255,255,0.47);
-}
-.social .fb{
-margin-left: 25px;
-}
-.social i{
-margin-right: 4px;
-}
-.signup-btn{
-  background-color: #080710;
-}
-.form-check-label{
-  color: white !important;
-} */
-/* <........................New Login..............................> */
-
-
-
-
-/*//////////////////////////////////////////////////////////////////
-[ FONT ]*/
-/* 
-@font-face {
-  font-family: Poppins-Regular;
-  src: url('../fonts/poppins/Poppins-Regular.ttf'); 
-}
-
-@font-face {
-  font-family: Poppins-Medium;
-  src: url('../fonts/poppins/Poppins-Medium.ttf'); 
-}
-
-@font-face {
-  font-family: Poppins-Bold;
-  src: url('../fonts/poppins/Poppins-Bold.ttf'); 
-}
-
-@font-face {
-  font-family: Poppins-SemiBold;
-  src: url('../fonts/poppins/Poppins-SemiBold.ttf'); 
-}
-
-
-* {
-	margin: 0px; 
-	padding: 0px; 
-	box-sizing: border-box;
-}
-
-body, html {
-	height: 100%;
-	font-family: Poppins-Regular, sans-serif;
-} */
-
-/*---------------------------------------------*/
 .limiter {
   width: 100%;
   margin: 0 auto;
@@ -1587,4 +1428,36 @@ input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #3e3e3e inset !important;
     -webkit-text-fill-color: var(--para-clr) !important;
 }
+.modal-header{
+  background-color: var(--modal-backgroundcolor);
+  /* border: none; */
+  color: var(--para-clr) !important;
+  border-bottom-color: #6c6c6c !important ;
+}
+.modal-body{
+  background-color: var(--modal-backgroundcolor);
+  border: none;
+  color: var(--para-clr) !important;
+}
+.modal-footer{
+  background-color: var(--modal-backgroundcolor) !  important;
+  color: var(--para-clr) !important;
+  border-top: none !important;
+}
+.checkout-items p{
+  color: var(--para-clr)!important;
 
+} 
+.orderconfirmed p{
+  color: var(--para-clr);
+}
+.addtostock{
+  padding: "1rem 2rem";
+  font-size: "1rem";
+  background-color: "#007bff";
+  color: "white";
+  border: "none";
+  border-radius: "5px";
+  cursor: "pointer";
+  margin-bottom: "1rem";
+}

@@ -1,7 +1,12 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-
-const OrderConfirmation = ({ show, handleClose, errorMessage }) => {
+import { useNavigate } from "react-router-dom";
+const OrderConfirmation = ({ show, handleClose, errorMessage,orderValue }) => {
+const navigate = useNavigate()
+const handlechange=()=>{
+  navigate("/")
+  handleClose()
+}
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -13,11 +18,11 @@ const OrderConfirmation = ({ show, handleClose, errorMessage }) => {
             <p>{errorMessage}</p>
           </div>
         ) : (
-          <p>Your order has been confirmed!</p>
+          <p>Your order for <span className="order-value">{orderValue} </span>has been confirmed!</p>
         )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={handlechange}>
           Close
         </Button>
       </Modal.Footer>

@@ -53,9 +53,9 @@ const Product = () => {
     try {
       await axios.delete(`http://localhost:8080/api/product/${id}`, {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+          Authorization: `Bearer ${token}`,
+        },
+      });
       removeFromCart(id);
       console.log("Product deleted successfully");
       alert("Product deleted successfully");
@@ -81,6 +81,7 @@ const Product = () => {
       </h2>
     );
   }
+
   return (
     <>
       <div className="containers" style={{ display: "flex" }}>
@@ -98,7 +99,7 @@ const Product = () => {
                 {product.category}
               </span>
               <span className="release-date" style={{ marginBottom: "2rem" }}>
-                <h6 style={{color:'white'}}>
+                <h6 style={{ color: "white" }}>
                   Listed :{" "}
                   <span>
                     {" "}
@@ -125,8 +126,8 @@ const Product = () => {
                 fontSize: "1rem",
                 margin: "10px 0px 0px",
                 marginBottom: "1rem",
-                textDecoration: 'underline',
-                color:'darkgrey'
+                textDecoration: "underline",
+                color: "darkgrey",
               }}
             >
               PRODUCT DESCRIPTION :
@@ -140,23 +141,14 @@ const Product = () => {
             </span>
             <button
               className={`cart-btn ${
-                !product.productAvailable ? "disabled-btn" : ""
+                product.stockQuantity === 0 ? "disabled-btn" : "addtostock"
               }`}
               onClick={handlAddToCart}
-              disabled={!product.productAvailable}
-              style={{
-                padding: "1rem 2rem",
-                fontSize: "1rem",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                marginBottom: "1rem",
-              }}
+              disabled={product.stockQuantity === 0}
             >
-              {product.productAvailable ? "Add to cart" : "Out of Stock"}
+              {product.stockQuantity === 0 ? "Out of Stock" : "Add to cart"}
             </button>
+
             <h6 style={{ marginBottom: "1rem" }}>
               Stock Available :{" "}
               <i style={{ color: "green", fontWeight: "bold" }}>

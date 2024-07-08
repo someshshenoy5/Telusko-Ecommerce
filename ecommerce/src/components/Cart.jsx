@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import AppContext from "../Context/Context";
 import axios from "axios";
 import CheckoutPopup from "./CheckoutPopup";
-import { Button } from 'react-bootstrap';
+import { Button } from "react-bootstrap";
 import OrderConfirmation from "./OrderConfirmed.jsx";
 
 const Cart = () => {
@@ -12,20 +12,33 @@ const Cart = () => {
   const [showModal, setShowModal] = useState(false);
   const [orderConfirmed, setOrderConfirmed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [orderValue, setOrderValue]= useState('')
+  const { token } = useContext(AppContext);
 
   useEffect(() => {
     const fetchImagesAndUpdateCart = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/api/products");
+        const response = await axios.get("http://localhost:8080/api/products", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const backendProductIds = response.data.map((product) => product.id);
 
-        const updatedCartItems = cart.filter((item) => backendProductIds.includes(item.id));
+        const updatedCartItems = cart.filter((item) =>
+          backendProductIds.includes(item.id)
+        );
         const cartItemsWithImages = await Promise.all(
           updatedCartItems.map(async (item) => {
             try {
               const response = await axios.get(
                 `http://localhost:8080/api/product/${item.id}/image`,
-                { responseType: "blob" }
+                {
+                  responseType: "blob",
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
               );
               const imageUrl = URL.createObjectURL(response.data);
               return { ...item, imageUrl };
@@ -90,13 +103,17 @@ const Cart = () => {
         return acc;
       }, {});
 
-
-      const response = await axios.post("http://localhost:8080/api/checkout", checkoutData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      console.log(response.data )
+      const response = await axios.post(
+        "http://localhost:8080/api/checkout",
+        checkoutData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+      setOrderValue(response.data)
       setShowModal(false);
       setOrderConfirmed(true);
       setErrorMessage("");
@@ -104,9 +121,12 @@ const Cart = () => {
       setCartItems([]);
     } catch (error) {
       console.error("Error during checkout:", error);
-      setErrorMessage(error.response?.data || "There was an issue during checkout. Please try again.");
-      setShowModal(false)
-      setOrderConfirmed(true); 
+      setErrorMessage(
+        error.response?.data ||
+          "There was an issue during checkout. Please try again."
+      );
+      setShowModal(false);
+      setOrderConfirmed(true);
     }
   };
 
@@ -126,11 +146,7 @@ const Cart = () => {
                   className="item"
                   style={{ display: "flex", alignContent: "center" }}
                 >
-                  <div className="buttons">
-                    <div className="buttons-liked">
-                      <i className="bi bi-heart"></i>
-                    </div>
-                  </div>
+                 
                   <div>
                     <img
                       src={item.imageUrl}
@@ -151,11 +167,7 @@ const Cart = () => {
                     >
                       <i className="bi bi-plus-square-fill"></i>
                     </button>
-                    <input
-                      type="button"
-                      value={item.quantity}
-                      readOnly
-                    />
+                    <input type="button" value={item.quantity} readOnly />
                     <button
                       className="minus-btn"
                       type="button"
@@ -199,6 +211,7 @@ const Cart = () => {
         show={orderConfirmed}
         handleClose={() => setOrderConfirmed(false)}
         errorMessage={errorMessage}
+        orderValue={orderValue}
       />
     </div>
   );
